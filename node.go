@@ -648,6 +648,7 @@ func (n *node) recvFromPeer(transit msg.Transit) {
 			name:      peer.name,
 			address:   strings.SplitN(strings.TrimPrefix(m.Endpoint, "tcp://"), ":", 2)[0],
 			headers:   make(map[string]string),
+			recvTime:  time.Now(),
 		}
 
 		// Store peer headers for future reference
