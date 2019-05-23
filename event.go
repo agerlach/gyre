@@ -47,7 +47,7 @@ type Event struct {
 	headers   map[string]string // Headers, for an ENTER event
 	group     string            // Group name for a SHOUT event
 	msg       []byte            // Message payload for SHOUT or WHISPER
-	recvTime  time.Time         // Time of event
+	time      time.Time         // Time of event
 }
 
 // Type returns event type, which is a EventType.
@@ -94,5 +94,5 @@ func (e *Event) Msg() []byte {
 
 // Time returns the time of when the event occured
 func (e *Event) Time() time.Time {
-	return e.recvTime
+	return e.time
 }
