@@ -503,7 +503,7 @@ func (n *node) removePeer(peer *peer) {
 
 	// Tell the calling application the peer has gone
 	select {
-	case n.events <- &Event{eventType: EventExit, sender: peer.identity, name: peer.name}:
+	case n.events <- &Event{eventType: EventExit, sender: peer.identity, name: peer.name, recvTime: time.Now()}:
 	default:
 		if n.verbose {
 			log.Printf("[%s] Dropping event: %s", n.name, EventExit)
@@ -541,7 +541,7 @@ func (n *node) joinPeerGroup(peer *peer, name string) *group {
 
 	// Now tell the caller about the peer joined group
 	select {
-	case n.events <- &Event{eventType: EventJoin, sender: peer.identity, name: peer.name, group: name}:
+	case n.events <- &Event{eventType: EventJoin, sender: peer.identity, name: peer.name, group: name, recvTime: time.Now()}:
 	default:
 		if n.verbose {
 			log.Printf("[%s] Dropping event: %s", n.name, EventJoin)
@@ -558,7 +558,7 @@ func (n *node) leavePeerGroup(peer *peer, name string) *group {
 
 	// Now tell the caller about the peer left group
 	select {
-	case n.events <- &Event{eventType: EventLeave, sender: peer.identity, name: peer.name, group: name}:
+	case n.events <- &Event{eventType: EventLeave, sender: peer.identity, name: peer.name, group: name, recvTime: time.Now()}:
 	default:
 		if n.verbose {
 			log.Printf("[%s] Dropping event: %s", n.name, EventLeave)
@@ -677,7 +677,7 @@ func (n *node) recvFromPeer(transit msg.Transit) {
 	case *msg.Whisper:
 		// Pass up to caller API as WHISPER event
 		select {
-		case n.events <- &Event{eventType: EventWhisper, sender: identity, name: peer.name, msg: m.Content}:
+		case n.events <- &Event{eventType: EventWhisper, sender: identity, name: peer.name, msg: m.Content, recvTime: time.Now()}:
 		default:
 			if n.verbose {
 				log.Printf("[%s] Dropping event: %s", n.name, EventWhisper)
@@ -687,7 +687,7 @@ func (n *node) recvFromPeer(transit msg.Transit) {
 	case *msg.Shout:
 		// Pass up to caller as SHOUT event
 		select {
-		case n.events <- &Event{eventType: EventShout, sender: identity, name: peer.name, group: m.Group, msg: m.Content}:
+		case n.events <- &Event{eventType: EventShout, sender: identity, name: peer.name, group: m.Group, msg: m.Content, recvTime: time.Now()}:
 		default:
 			if n.verbose {
 				log.Printf("[%s] Dropping event: %s", n.name, EventShout)
